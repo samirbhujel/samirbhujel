@@ -1,92 +1,76 @@
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('DOM loaded'); // Debug log
-
     function initTypingAnimations() {
-        try {
-            const typingElements = document.querySelectorAll('[data-typing]');
-            console.log('Found typing elements:', typingElements.length); // Debug log
-
-            if (typingElements.length === 0) {
-                console.error('No typing elements found!');
-                return;
-            }
-
-            typingElements.forEach(element => {
-                const originalText = element.textContent;
-                console.log('Original text:', originalText); // Debug log
-
-                const delay = parseInt(element.dataset.typingDelay) || 100;
-                const startDelay = parseInt(element.dataset.typingStart) || 0;
-                const effect = element.dataset.typingEffect || 'default';
-
-                // Don't clear text immediately
-                const currentText = element.textContent;
-
-                setTimeout(() => {
-                    try {
-                        if (effect === 'loop') {
-                            typeLoop(element, currentText, delay);
+        const typingElements = document.querySelectorAll('[data-typing]');
+        
+        const effects = {
+            loop: (element, text, delay) => {
+                const words = text.split('|');
+                let wordIndex = 0;
+                
+                const typeWord = () => {
+                    const currentWord = words[wordIndex];
+                    let charIndex = 0;
+                    
+                    // Clear the text before starting to type
+                    element.textContent = '';
+                    
+                    function typeChar() {
+                        if (charIndex < currentWord.length) {
+                            // Add character one by one
+                            element.textContent += currentWord.charAt(charIndex);
+                            charIndex++;
+                            setTimeout(typeChar, delay);
                         } else {
-                            typeDefault(element, currentText, delay);
+                            // Word is complete, wait 10 seconds before next word
+                            setTimeout(() => {
+                                element.textContent = ''; // Clear text completely
+                                wordIndex = (wordIndex + 1) % words.length;
+                                typeWord(); // Start next word
+                            }, 10000);
                         }
-                    } catch (error) {
-                        console.error('Error in typing effect:', error);
-                        // Restore original text if there's an error
-                        element.textContent = originalText;
                     }
-                }, startDelay);
-            });
-        } catch (error) {
-            console.error('Error in initTypingAnimations:', error);
-        }
-    }
-
-    function typeLoop(element, text, delay) {
-        const words = text.split('|');
-        let wordIndex = 0;
-
-        function typeWord() {
-            const currentWord = words[wordIndex];
-            let charIndex = 0;
-
-            // Clear the element
+                    
+                    typeChar();
+                };
+                
+                typeWord();
+            },
+            
+            default: (element, text, delay) => {
+                let charIndex = 0;
+                element.textContent = '';
+                
+                const interval = setInterval(() => {
+                    if (charIndex < text.length) {
+                        element.textContent += text.charAt(charIndex);
+                        charIndex++;
+                    } else {
+                        clearInterval(interval);
+                    }
+                }, delay);
+            }
+        };
+        
+        typingElements.forEach(element => {
+            const text = element.textContent;
+            const delay = parseInt(element.dataset.typingDelay) || 100;
+            const startDelay = parseInt(element.dataset.typingStart) || 0;
+            const effect = element.dataset.typingEffect || 'default';
+            
+            // Clear initial text
             element.textContent = '';
-
-            function typeChar() {
-                if (charIndex < currentWord.length) {
-                    element.textContent += currentWord[charIndex];
-                    charIndex++;
-                    setTimeout(typeChar, delay);
+            
+            // Start animation after specified delay
+            setTimeout(() => {
+                if (effects[effect]) {
+                    effects[effect](element, text, delay);
                 } else {
-                    // Word is complete, wait 10 seconds before next word
-                    setTimeout(() => {
-                        wordIndex = (wordIndex + 1) % words.length;
-                        typeWord();
-                    }, 10000);
+                    effects.default(element, text, delay);
                 }
-            }
-
-            typeChar();
-        }
-
-        typeWord();
+            }, startDelay);
+        });
     }
 
-    function typeDefault(element, text, delay) {
-        let charIndex = 0;
-        element.textContent = '';
-
-        function typeChar() {
-            if (charIndex < text.length) {
-                element.textContent += text[charIndex];
-                charIndex++;
-                setTimeout(typeChar, delay);
-            }
-        }
-
-        typeChar();
-    }
-
-    // Initialize with a small delay to ensure DOM is ready
-    setTimeout(initTypingAnimations, 100);
+    // Initialize typing animations
+    initTypingAnimations();
 }); 
