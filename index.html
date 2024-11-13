@@ -29,11 +29,11 @@
 
   <!-- Add these to your head section -->
   <audio id="narutoSound" preload="auto">
-    <source src="C:\Users\bhuje\.cursor\Prot\assets\sound\naruto.mp3" type="audio/mpeg">
+    <source src="./assets/sound/naruto.mp3" type="audio/mpeg">
   </audio>
 
   <audio id="goatSound" preload="auto">
-    <source src="C:\Users\bhuje\.cursor\Prot\assets\sound\goat.mp3" type="audio/mpeg">
+    <source src="./assets/sound/goat.mp3" type="audio/mpeg">
   </audio>
 </head>
 
@@ -58,7 +58,9 @@
         </figure>
 
         <div class="info-content">
-          <h1 class="name" title="Samir Bhujel"> Samir Bhujel</h1>
+          <h1 class="name" data-typing data-typing-delay="100">Samir Bhujel</h1>
+
+          <p class="title" data-typing data-typing-effect="loop" data-typing-delay="150" data-typing-start="1000">Soccer Player|Weeb|Graphic Designer</p>
 
       
         <button class="info_more-btn" data-sidebar-btn>
@@ -1086,6 +1088,12 @@
   <!-- Add these before closing body tag -->
   <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
   <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+
+  <!-- Update your script tags -->
+  <script src="./assets/js/typing-animation.js"></script>
+
+  <!-- Add this before your closing </body> tag, after other scripts -->
+  <script src="./assets/js/stars.js"></script>
 
 </body>
 

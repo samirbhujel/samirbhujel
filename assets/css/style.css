@@ -107,6 +107,8 @@
 body {
   transition: var(--transition-theme);
   cursor: none; /* Hide default cursor */
+  position: relative;
+  background-color: #000; /* Or your preferred dark background color */
 }
 
 body.light-mode {
@@ -2596,4 +2598,18 @@ article[data-page].active {
         transform: translate(50%, -50%) rotate(360deg);
         opacity: 0;
     }
+}
+
+[data-typing] {
+    border-right: 2px solid transparent;
+    animation: cursor-blink 1s step-end infinite;
+}
+
+@keyframes cursor-blink {
+    from, to { border-color: transparent; }
+    50% { border-color: var(--orange-yellow-crayola); }
+}
+
+canvas {
+    pointer-events: none;
 }
