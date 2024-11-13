@@ -1089,6 +1089,80 @@
   <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
   <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
 
+  <!-- Update your script tags -->
+  <script>
+  // Add the typing animation code directly in the HTML file
+  document.addEventListener('DOMContentLoaded', function() {
+      function initTypingAnimations() {
+          const typingElements = document.querySelectorAll('[data-typing]');
+          
+          const effects = {
+              loop: (element, text, delay) => {
+                  const words = text.split('|');
+                  let wordIndex = 0;
+                  let charIndex = 0;
+                  
+                  const typeWord = () => {
+                      const currentWord = words[wordIndex];
+                      
+                      if (charIndex < currentWord.length) {
+                          element.textContent += currentWord.charAt(charIndex);
+                          charIndex++;
+                          setTimeout(typeWord, delay);
+                      } else {
+                          // Word is fully typed, wait 10 seconds then start next word
+                          setTimeout(() => {
+                              charIndex = 0;
+                              element.textContent = '';
+                              wordIndex = (wordIndex + 1) % words.length;
+                              typeWord();
+                          }, 10000); // 10 seconds pause
+                      }
+                  };
+                  
+                  typeWord();
+              },
+              
+              default: (element, text, delay) => {
+                  let charIndex = 0;
+                  element.textContent = '';
+                  
+                  const interval = setInterval(() => {
+                      if (charIndex < text.length) {
+                          element.textContent += text.charAt(charIndex);
+                          charIndex++;
+                      } else {
+                          clearInterval(interval);
+                      }
+                  }, delay);
+              }
+          };
+          
+          typingElements.forEach(element => {
+              const text = element.textContent;
+              const delay = parseInt(element.dataset.typingDelay) || 100;
+              const startDelay = parseInt(element.dataset.typingStart) || 0;
+              const effect = element.dataset.typingEffect || 'default';
+              
+              // Clear initial text
+              element.textContent = '';
+              
+              // Start animation after specified delay
+              setTimeout(() => {
+                  if (effects[effect]) {
+                      effects[effect](element, text, delay);
+                  } else {
+                      effects.default(element, text, delay);
+                  }
+              }, startDelay);
+          });
+      }
+
+      // Initialize typing animations
+      initTypingAnimations();
+  });
+  </script>
+
 </body>
 
 </html>
