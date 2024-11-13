@@ -2597,3 +2597,13 @@ article[data-page].active {
         opacity: 0;
     }
 }
+
+[data-typing] {
+    border-right: 2px solid transparent;
+    animation: cursor-blink 1s step-end infinite;
+}
+
+@keyframes cursor-blink {
+    from, to { border-color: transparent; }
+    50% { border-color: var(--orange-yellow-crayola); }
+}

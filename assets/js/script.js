@@ -403,6 +403,30 @@ function initNavigation() {
     
     // Show initial page
     handleInitialPage();
+
+    // Add smooth scroll behavior
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                e.preventDefault();
+                target.scrollIntoView({
+                    behavior: 'smooth'
+                });
+            }
+        });
+    });
+
+    // Add keyboard navigation
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            // Close any open modals
+            const openModal = document.querySelector('.modal-container.active');
+            if (openModal) {
+                testimonialsModalFunc();
+            }
+        }
+    });
 }
 
 // Initialize everything when DOM is loaded
@@ -417,6 +441,7 @@ document.addEventListener('DOMContentLoaded', function() {
     initGojoEasterEgg();
     initNarutoEasterEgg();
     initSukunaEasterEgg();
+    initTypingAnimations();
 });
 
 // Messi Easter Egg
@@ -698,4 +723,79 @@ function initSukunaEasterEgg() {
             attributeFilter: ['class']
         });
     }
+}
+
+// Add after DOMContentLoaded event
+window.addEventListener('load', () => {
+    // Remove any loading screens/spinners
+    const loader = document.querySelector('.loader');
+    if (loader) {
+        loader.style.opacity = '0';
+        setTimeout(() => loader.remove(), 500);
+    }
+});
+
+function initTypingAnimations() {
+    const typingElements = document.querySelectorAll('[data-typing]');
+    
+    const effects = {
+        loop: (element, text, delay) => {
+            const words = text.split('|');
+            let wordIndex = 0;
+            let charIndex = 0;
+            
+            const typeWord = () => {
+                const currentWord = words[wordIndex];
+                
+                if (charIndex < currentWord.length) {
+                    element.textContent += currentWord.charAt(charIndex);
+                    charIndex++;
+                    setTimeout(typeWord, delay);
+                } else {
+                    // Word is fully typed, wait 10 seconds then start next word
+                    setTimeout(() => {
+                        charIndex = 0;
+                        element.textContent = '';
+                        wordIndex = (wordIndex + 1) % words.length;
+                        typeWord();
+                    }, 10000); // 10 seconds pause
+                }
+            };
+            
+            typeWord();
+        },
+        
+        default: (element, text, delay) => {
+            let charIndex = 0;
+            element.textContent = '';
+            
+            const interval = setInterval(() => {
+                if (charIndex < text.length) {
+                    element.textContent += text.charAt(charIndex);
+                    charIndex++;
+                } else {
+                    clearInterval(interval);
+                }
+            }, delay);
+        }
+    };
+    
+    typingElements.forEach(element => {
+        const text = element.textContent;
+        const delay = parseInt(element.dataset.typingDelay) || 100;
+        const startDelay = parseInt(element.dataset.typingStart) || 0;
+        const effect = element.dataset.typingEffect || 'default';
+        
+        // Clear initial text
+        element.textContent = '';
+        
+        // Start animation after specified delay
+        setTimeout(() => {
+            if (effects[effect]) {
+                effects[effect](element, text, delay);
+            } else {
+                effects.default(element, text, delay);
+            }
+        }, startDelay);
+    });
 }
