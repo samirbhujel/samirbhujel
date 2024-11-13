@@ -107,6 +107,8 @@
 body {
   transition: var(--transition-theme);
   cursor: none; /* Hide default cursor */
+  position: relative;
+  background-color: #000; /* Or your preferred dark background color */
 }
 
 body.light-mode {
@@ -2606,4 +2608,8 @@ article[data-page].active {
 @keyframes cursor-blink {
     from, to { border-color: transparent; }
     50% { border-color: var(--orange-yellow-crayola); }
+}
+
+canvas {
+    pointer-events: none;
 }
