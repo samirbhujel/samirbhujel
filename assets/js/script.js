@@ -443,7 +443,6 @@ document.addEventListener('DOMContentLoaded', function() {
     initSukunaEasterEgg();
     initTypingAnimations();
 });
-
 // Messi Easter Egg
 function initMessiEasterEgg() {
     const goatSound = document.getElementById('goatSound');
@@ -799,3 +798,4 @@ function initTypingAnimations() {
         }, startDelay);
     });
 }
+
